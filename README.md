@@ -1,6 +1,6 @@
 # mackerel-plugin-log-counter
 
-mackerel metric plugin for count logs
+mackerel metric plugin for count lines in log
 
 ## Usage
 
