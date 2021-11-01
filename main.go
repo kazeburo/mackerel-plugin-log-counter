@@ -50,7 +50,7 @@ func NewParser(opts cmdOpts) *parser {
 }
 
 func (p *parser) Parse(b []byte) error {
-	if !bytes.Contains(b, *p.opts.filterByte) {
+	if p.opts.filterByte != nil && !bytes.Contains(b, *p.opts.filterByte) {
 		return nil
 	}
 	for _, pr := range p.opts.patternRegs {
