@@ -23,6 +23,7 @@ type patternReg struct {
 type cmdOpts struct {
 	Version     bool     `short:"v" long:"version" description:"Show version"`
 	Filter      string   `long:"filter" description:"filter string used before check pattern."`
+	Ignore      string   `long:"ignore" description:"ignore string used before check pattern."`
 	Patterns    []string `short:"p" long:"pattern" required:"true" description:"Regexp pattern to search for."`
 	KeyNames    []string `short:"k" long:"key-name" required:"true" description:"Key name for pattern"`
 	Prefix      string   `long:"prefix" required:"true" description:"Metric key prefix"`
@@ -30,6 +31,7 @@ type cmdOpts struct {
 	PerSec      bool     `long:"per-second" description:"calcurate per-seconds count. default per minute count"`
 	patternRegs []patternReg
 	filterByte  *[]byte
+	ignoreByte  *[]byte
 }
 
 type parser struct {
@@ -51,6 +53,9 @@ func NewParser(opts cmdOpts) *parser {
 
 func (p *parser) Parse(b []byte) error {
 	if p.opts.filterByte != nil && !bytes.Contains(b, *p.opts.filterByte) {
+		return nil
+	}
+	if p.opts.ignoreByte != nil && bytes.Contains(b, *p.opts.ignoreByte) {
 		return nil
 	}
 	for _, pr := range p.opts.patternRegs {
@@ -175,6 +180,10 @@ Compiler: %s %s
 	if opts.Filter != "" {
 		b := []byte(opts.Filter)
 		opts.filterByte = &b
+	}
+	if opts.Ignore != "" {
+		b := []byte(opts.Ignore)
+		opts.ignoreByte = &b
 	}
 
 	u := LogCounterPlugin{opts}
