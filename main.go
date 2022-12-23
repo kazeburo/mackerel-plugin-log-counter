@@ -10,6 +10,7 @@ import (
 	"github.com/jessevdk/go-flags"
 	"github.com/kazeburo/followparser"
 	mp "github.com/mackerelio/go-mackerel-plugin"
+	"github.com/mackerelio/golib/pluginutil"
 )
 
 // version by Makefile
@@ -116,10 +117,13 @@ func (u LogCounterPlugin) GraphDefinition() map[string]mp.Graphs {
 
 func (u LogCounterPlugin) FetchMetrics() (map[string]float64, error) {
 	p := NewParser(u.opts)
-	err := followparser.Parse(
+	fp := &followparser.Parser{
+		WorkDir:  pluginutil.PluginWorkDir(),
+		Callback: p,
+	}
+	err := fp.Parse(
 		fmt.Sprintf("%s-mp-log-counter", u.opts.Prefix),
 		u.opts.LogFile,
-		p,
 	)
 	if err != nil {
 		return nil, err
