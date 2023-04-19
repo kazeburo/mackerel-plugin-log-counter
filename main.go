@@ -30,6 +30,7 @@ type cmdOpts struct {
 	Prefix      string   `long:"prefix" required:"true" description:"Metric key prefix"`
 	LogFile     string   `long:"log-file" default:"/var/log/messages" description:"Path to log file" required:"true"`
 	PerSec      bool     `long:"per-second" description:"calcurate per-seconds count. default per minute count"`
+	Verbose     bool     `long:"verbose" description:"display infomational logs"`
 	patternRegs []patternReg
 	filterByte  *[]byte
 	ignoreByte  *[]byte
@@ -120,8 +121,9 @@ func (u LogCounterPlugin) FetchMetrics() (map[string]float64, error) {
 	fp := &followparser.Parser{
 		WorkDir:  pluginutil.PluginWorkDir(),
 		Callback: p,
+		Silent:   !u.opts.Verbose,
 	}
-	err := fp.Parse(
+	_, err := fp.Parse(
 		fmt.Sprintf("%s-mp-log-counter", u.opts.Prefix),
 		u.opts.LogFile,
 	)
