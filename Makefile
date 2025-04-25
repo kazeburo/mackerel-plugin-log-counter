@@ -14,12 +14,8 @@ fmt:
 	go fmt ./...
 
 check:
-	go test ./...
+	go test -v ./...
 
 clean:
 	rm -rf mackerel-plugin-log-counter
 
-tag:
-	git tag v${VERSION}
-	git push origin v${VERSION}
-	git push origin main
