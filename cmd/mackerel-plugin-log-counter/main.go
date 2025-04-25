@@ -26,7 +26,7 @@ type Opt struct {
 	KeyNames    []string `short:"k" long:"key-name" required:"true" description:"Key name for pattern"`
 	Prefix      string   `long:"prefix" required:"true" description:"Metric key prefix"`
 	LogFile     string   `long:"log-file" default:"/var/log/messages" description:"Path to log file" required:"true"`
-	PerSec      bool     `long:"per-second" description:"calcurate per-seconds count. default per minute count"`
+	PerSec      bool     `long:"per-second" description:"calculate per-seconds count. default per minute count"`
 	Verbose     bool     `long:"verbose" description:"display infomational logs"`
 	patternRegs []patternReg
 	filterByte  *[]byte
