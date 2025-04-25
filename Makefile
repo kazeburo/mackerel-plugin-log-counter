@@ -4,11 +4,11 @@ all: mackerel-plugin-log-counter
 
 .PHONY: mackerel-plugin-linux-process-status
 
-mackerel-plugin-log-counter: cmd/mackerel-plugin-log-counter/main.go cmd/mackerel-plugin-log-counter/parser.go
-	go build $(LDFLAGS) -o mackerel-plugin-log-counter cmd/mackerel-plugin-log-counter/main.go cmd/mackerel-plugin-log-counter/parser.go
+mackerel-plugin-log-counter: cmd/mackerel-plugin-log-counter/*.go
+	go build $(LDFLAGS) -o mackerel-plugin-log-counter cmd/mackerel-plugin-log-counter/*.go
 
-linux: cmd/mackerel-plugin-log-counter/main.go cmd/mackerel-plugin-log-counter/parser.go
-	GOOS=linux GOARCH=amd64 go build $(LDFLAGS) -o mackerel-plugin-log-counter cmd/mackerel-plugin-log-counter/main.go cmd/mackerel-plugin-log-counter/parser.go
+linux: cmd/mackerel-plugin-log-counter/*.go
+	GOOS=linux GOARCH=amd64 go build $(LDFLAGS) -o mackerel-plugin-log-counter cmd/*.go
 
 fmt:
 	go fmt ./...

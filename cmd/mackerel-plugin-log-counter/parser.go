@@ -4,7 +4,7 @@ import "bytes"
 
 type Parser struct {
 	opt        Opt
-	mapClouter map[string]float64
+	mapCounter map[string]float64
 	duration   float64
 }
 
@@ -15,7 +15,7 @@ func NewParser(opt Opt) *Parser {
 	}
 	return &Parser{
 		opt:        opt,
-		mapClouter: m,
+		mapCounter: m,
 	}
 }
 
@@ -28,7 +28,7 @@ func (p *Parser) Parse(b []byte) error {
 	}
 	for _, pr := range p.opt.patternRegs {
 		if pr.reg.Match(b) {
-			p.mapClouter[pr.name]++
+			p.mapCounter[pr.name]++
 		}
 	}
 	return nil
@@ -45,7 +45,7 @@ func (p *Parser) GetResult() map[string]float64 {
 		return m
 	}
 	for _, pr := range p.opt.patternRegs {
-		m[pr.name] = p.mapClouter[pr.name]
+		m[pr.name] = p.mapCounter[pr.name]
 		if p.opt.PerSec {
 			m[pr.name] = m[pr.name] / p.duration
 		} else {
