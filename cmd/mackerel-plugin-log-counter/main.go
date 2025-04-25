@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"os"
 	"regexp"
@@ -21,7 +20,7 @@ type patternReg struct {
 	name string
 }
 
-type cmdOpts struct {
+type Opt struct {
 	Version     bool     `short:"v" long:"version" description:"Show version"`
 	Filter      string   `long:"filter" description:"filter string used before check pattern."`
 	Ignore      string   `long:"ignore" description:"ignore string used before check pattern."`
@@ -36,66 +35,13 @@ type cmdOpts struct {
 	ignoreByte  *[]byte
 }
 
-type parser struct {
-	opts     cmdOpts
-	cnt      map[string]float64
-	duration float64
-}
-
-func NewParser(opts cmdOpts) *parser {
-	m := map[string]float64{}
-	for _, pr := range opts.patternRegs {
-		m[pr.name] = float64(0)
-	}
-	return &parser{
-		opts: opts,
-		cnt:  m,
-	}
-}
-
-func (p *parser) Parse(b []byte) error {
-	if p.opts.filterByte != nil && !bytes.Contains(b, *p.opts.filterByte) {
-		return nil
-	}
-	if p.opts.ignoreByte != nil && bytes.Contains(b, *p.opts.ignoreByte) {
-		return nil
-	}
-	for _, pr := range p.opts.patternRegs {
-		if pr.reg.Match(b) {
-			p.cnt[pr.name]++
-		}
-	}
-	return nil
-}
-
-func (p *parser) Finish(duration float64) {
-	p.duration = duration
-}
-
-func (p *parser) GetResult() map[string]float64 {
-	m := map[string]float64{}
-	if p.duration == 0 {
-		// first running
-		return m
-	}
-	for _, pr := range p.opts.patternRegs {
-		m[pr.name] = p.cnt[pr.name]
-		if p.opts.PerSec {
-			m[pr.name] = m[pr.name] / p.duration
-		} else {
-			m[pr.name] = (m[pr.name] / p.duration) * 60
-		}
-	}
-	return m
-}
-
 type LogCounterPlugin struct {
-	opts cmdOpts
+	opt Opt
 }
 
 func (u LogCounterPlugin) GraphDefinition() map[string]mp.Graphs {
 	metrics := make([]mp.Metrics, 0)
-	for _, pr := range u.opts.patternRegs {
+	for _, pr := range u.opt.patternRegs {
 		metrics = append(metrics, mp.Metrics{
 			Name:    pr.name,
 			Label:   pr.name,
@@ -104,12 +50,12 @@ func (u LogCounterPlugin) GraphDefinition() map[string]mp.Graphs {
 		})
 	}
 	comment := "(per minute)"
-	if u.opts.PerSec {
+	if u.opt.PerSec {
 		comment = "(per second)"
 	}
 	return map[string]mp.Graphs{
 		"": {
-			Label:   fmt.Sprintf("LogCounter %s %s", u.opts.Prefix, comment),
+			Label:   fmt.Sprintf("LogCounter %s %s", u.opt.Prefix, comment),
 			Unit:    mp.UnitFloat,
 			Metrics: metrics,
 		},
@@ -117,15 +63,15 @@ func (u LogCounterPlugin) GraphDefinition() map[string]mp.Graphs {
 }
 
 func (u LogCounterPlugin) FetchMetrics() (map[string]float64, error) {
-	p := NewParser(u.opts)
+	p := NewParser(u.opt)
 	fp := &followparser.Parser{
 		WorkDir:  pluginutil.PluginWorkDir(),
 		Callback: p,
-		Silent:   !u.opts.Verbose,
+		Silent:   !u.opt.Verbose,
 	}
 	_, err := fp.Parse(
-		fmt.Sprintf("%s-mp-log-counter", u.opts.Prefix),
-		u.opts.LogFile,
+		fmt.Sprintf("%s-mp-log-counter", u.opt.Prefix),
+		u.opt.LogFile,
 	)
 	if err != nil {
 		return nil, err
@@ -134,7 +80,7 @@ func (u LogCounterPlugin) FetchMetrics() (map[string]float64, error) {
 }
 
 func (u LogCounterPlugin) MetricKeyPrefix() string {
-	return u.opts.Prefix
+	return u.opt.Prefix
 }
 
 func main() {
@@ -142,10 +88,10 @@ func main() {
 }
 
 func _main() int {
-	opts := cmdOpts{}
-	psr := flags.NewParser(&opts, flags.HelpFlag|flags.PassDoubleDash)
+	opt := Opt{}
+	psr := flags.NewParser(&opt, flags.HelpFlag|flags.PassDoubleDash)
 	_, err := psr.Parse()
-	if opts.Version {
+	if opt.Version {
 		fmt.Printf(`%s %s
 Compiler: %s %s
 `,
@@ -160,18 +106,18 @@ Compiler: %s %s
 		return 1
 	}
 
-	if len(opts.KeyNames) == 0 {
+	if len(opt.KeyNames) == 0 {
 		fmt.Fprint(os.Stderr, "Specify --pattern and --key-name\n", err)
 		return 1
 	}
-	if len(opts.KeyNames) != len(opts.Patterns) {
+	if len(opt.KeyNames) != len(opt.Patterns) {
 		fmt.Fprint(os.Stderr, "The number of --pattern and --key-name must be the same\n", err)
 		return 1
 	}
 
 	patterns := make([]patternReg, 0)
-	for i, k := range opts.KeyNames {
-		reg, err := regexp.Compile(opts.Patterns[i])
+	for i, k := range opt.KeyNames {
+		reg, err := regexp.Compile(opt.Patterns[i])
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%v\n", err)
 			return 1
@@ -181,18 +127,20 @@ Compiler: %s %s
 			name: k,
 		})
 	}
-	opts.patternRegs = patterns
+	opt.patternRegs = patterns
 
-	if opts.Filter != "" {
-		b := []byte(opts.Filter)
-		opts.filterByte = &b
+	if opt.Filter != "" {
+		b := []byte(opt.Filter)
+		opt.filterByte = &b
 	}
-	if opts.Ignore != "" {
-		b := []byte(opts.Ignore)
-		opts.ignoreByte = &b
+	if opt.Ignore != "" {
+		b := []byte(opt.Ignore)
+		opt.ignoreByte = &b
 	}
 
-	u := LogCounterPlugin{opts}
+	u := LogCounterPlugin{
+		opt: opt,
+	}
 	plugin := mp.NewMackerelPlugin(u)
 	plugin.Run()
 	return 0

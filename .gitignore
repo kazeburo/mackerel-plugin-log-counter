@@ -23,7 +23,7 @@ _testmain.go
 *.test
 *.prof
 
-mackerel-plugin-log-counter
+/mackerel-plugin-log-counter
 map.txt
 vendor/
 dist/
