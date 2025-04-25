@@ -107,11 +107,11 @@ Compiler: %s %s
 	}
 
 	if len(opt.KeyNames) == 0 {
-		fmt.Fprint(os.Stderr, "Specify --pattern and --key-name\n", err)
+		fmt.Fprint(os.Stderr, "Specify --pattern and --key-name\n")
 		return 1
 	}
 	if len(opt.KeyNames) != len(opt.Patterns) {
-		fmt.Fprint(os.Stderr, "The number of --pattern and --key-name must be the same\n", err)
+		fmt.Fprint(os.Stderr, "The number of --pattern and --key-name must be the same\n")
 		return 1
 	}
 
