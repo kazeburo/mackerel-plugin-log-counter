@@ -3,9 +3,9 @@ package main
 import "bytes"
 
 type Parser struct {
-	opt      Opt
-	cnt      map[string]float64
-	duration float64
+	opt        Opt
+	mapClouter map[string]float64
+	duration   float64
 }
 
 func NewParser(opt Opt) *Parser {
@@ -14,8 +14,8 @@ func NewParser(opt Opt) *Parser {
 		m[pr.name] = float64(0)
 	}
 	return &Parser{
-		opt: opt,
-		cnt: m,
+		opt:        opt,
+		mapClouter: m,
 	}
 }
 
@@ -28,7 +28,7 @@ func (p *Parser) Parse(b []byte) error {
 	}
 	for _, pr := range p.opt.patternRegs {
 		if pr.reg.Match(b) {
-			p.cnt[pr.name]++
+			p.mapClouter[pr.name]++
 		}
 	}
 	return nil
@@ -45,7 +45,7 @@ func (p *Parser) GetResult() map[string]float64 {
 		return m
 	}
 	for _, pr := range p.opt.patternRegs {
-		m[pr.name] = p.cnt[pr.name]
+		m[pr.name] = p.mapClouter[pr.name]
 		if p.opt.PerSec {
 			m[pr.name] = m[pr.name] / p.duration
 		} else {
