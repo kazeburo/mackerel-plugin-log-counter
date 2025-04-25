@@ -1,5 +1,6 @@
 builds:
   - binary: mackerel-plugin-log-counter
+    main: ./cmd/mackerel-plugin-log-counter/main.go
     goos:
       - linux
     goarch:
