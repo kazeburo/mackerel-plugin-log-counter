@@ -1,5 +1,8 @@
 # Changelog
 
+## [v0.0.8](https://github.com/kazeburo/mackerel-plugin-log-counter/compare/v0.0.7...v0.0.8) - 2025-04-26
+- fix goreleaser by @kazeburo in https://github.com/kazeburo/mackerel-plugin-log-counter/pull/6
+
 ## [v0.0.7](https://github.com/kazeburo/mackerel-plugin-log-counter/compare/v0.0.6...v0.0.7) - 2025-04-25
 - use tagpr by @kazeburo in https://github.com/kazeburo/mackerel-plugin-log-counter/pull/3
 - dir refactor by @kazeburo in https://github.com/kazeburo/mackerel-plugin-log-counter/pull/5
