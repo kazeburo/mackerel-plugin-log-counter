@@ -16,3 +16,9 @@ jobs:
 
       - name: test
         run: make check
+
+      - name: Snapshot GoReleaser
+        uses: goreleaser/goreleaser-action@v5
+        with:
+          version: latest
+          args: build --snapshot
