@@ -16,7 +16,7 @@ func TestLogCounterPlugin_FetchMetrics(t *testing.T) {
 	logFileName := filepath.Join(tmpdir, "log")
 	fh, err := os.Create(logFileName)
 	if err != nil {
-		t.Error(err)
+		t.Fatalf("failed to create log file: %v", err)
 	}
 
 	patterns := []patternReg{
