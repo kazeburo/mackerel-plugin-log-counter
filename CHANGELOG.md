@@ -1,5 +1,8 @@
 # Changelog
 
+## [v0.0.9](https://github.com/kazeburo/mackerel-plugin-log-counter/compare/v0.0.8...v0.0.9) - 2025-05-04
+- update deps and add tests by @kazeburo in https://github.com/kazeburo/mackerel-plugin-log-counter/pull/8
+
 ## [v0.0.8](https://github.com/kazeburo/mackerel-plugin-log-counter/compare/v0.0.7...v0.0.8) - 2025-04-26
 - fix goreleaser by @kazeburo in https://github.com/kazeburo/mackerel-plugin-log-counter/pull/6
 
