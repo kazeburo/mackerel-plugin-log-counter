@@ -61,7 +61,7 @@ func TestLogCounterPlugin_FetchMetrics(t *testing.T) {
 		assert.Equal(t, m, map[string]float64{
 			"pattern1": 10,
 			"pattern2": 10,
-		}, "match meterics")
+		}, "match metrics")
 	}
 
 	for i := 0; i < 5; i++ {
