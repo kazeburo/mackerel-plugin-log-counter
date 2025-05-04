@@ -13,7 +13,6 @@ func TestParser_Parse(t *testing.T) {
 	opt := Opt{
 		patternRegs: patterns,
 	}
-	parser := NewParser(opt)
 
 	tests := []struct {
 		input    []byte
@@ -25,15 +24,16 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			input:    []byte("warning issued"),
-			expected: map[string]float64{"pattern1": 1, "pattern2": 1},
+			expected: map[string]float64{"pattern1": 0, "pattern2": 1},
 		},
 		{
 			input:    []byte("no match here"),
-			expected: map[string]float64{"pattern1": 1, "pattern2": 1},
+			expected: map[string]float64{"pattern1": 0, "pattern2": 0},
 		},
 	}
 
 	for _, test := range tests {
+		parser := NewParser(opt)
 		err := parser.Parse(test.input)
 		if err != nil {
 			t.Errorf("unexpected error: %v", err)
@@ -57,7 +57,6 @@ func TestParser_FilterIgnore(t *testing.T) {
 		filterByte:  &filter,
 		ignoreByte:  &ignore,
 	}
-	parser := NewParser(opt)
 
 	tests := []struct {
 		input    []byte
@@ -69,15 +68,17 @@ func TestParser_FilterIgnore(t *testing.T) {
 		},
 		{
 			input:    []byte("ignore error occurred"),
-			expected: map[string]float64{"pattern1": 1},
+			expected: map[string]float64{"pattern1": 0},
 		},
 		{
 			input:    []byte("no match here"),
-			expected: map[string]float64{"pattern1": 1},
+			expected: map[string]float64{"pattern1": 0},
 		},
 	}
 
 	for _, test := range tests {
+		parser := NewParser(opt)
+
 		err := parser.Parse(test.input)
 		if err != nil {
 			t.Errorf("unexpected error: %v", err)
