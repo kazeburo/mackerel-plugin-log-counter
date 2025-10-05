@@ -19,18 +19,19 @@ type patternReg struct {
 }
 
 type Opt struct {
-	Version     bool     `short:"v" long:"version" description:"Show version"`
-	Filter      string   `long:"filter" description:"filter string used before check pattern."`
-	Ignore      string   `long:"ignore" description:"ignore string used before check pattern."`
-	Patterns    []string `short:"p" long:"pattern" required:"true" description:"Regexp pattern to search for."`
-	KeyNames    []string `short:"k" long:"key-name" required:"true" description:"Key name for pattern"`
-	Prefix      string   `long:"prefix" required:"true" description:"Metric key prefix"`
-	LogFile     string   `long:"log-file" default:"/var/log/messages" description:"Path to log file" required:"true"`
-	PerSec      bool     `long:"per-second" description:"calculate per-seconds count. default per minute count"`
-	Verbose     bool     `long:"verbose" description:"display infomational logs"`
-	patternRegs []patternReg
-	filterByte  *[]byte
-	ignoreByte  *[]byte
+	Version       bool     `short:"v" long:"version" description:"Show version"`
+	Filter        string   `long:"filter" description:"filter string used before check pattern."`
+	Ignore        string   `long:"ignore" description:"ignore string used before check pattern."`
+	Patterns      []string `short:"p" long:"pattern" required:"true" description:"Regexp pattern to search for."`
+	KeyNames      []string `short:"k" long:"key-name" required:"true" description:"Key name for pattern"`
+	Prefix        string   `long:"prefix" required:"true" description:"Metric key prefix"`
+	LogFile       string   `long:"log-file" default:"/var/log/messages" description:"Path to log file" required:"true"`
+	LogArchiveDir string   `long:"log-archive-dir" default:"" description:"Path to log archive directory"`
+	PerSec        bool     `long:"per-second" description:"calculate per-seconds count. default per minute count"`
+	Verbose       bool     `long:"verbose" description:"display infomational logs"`
+	patternRegs   []patternReg
+	filterByte    *[]byte
+	ignoreByte    *[]byte
 }
 
 func main() {

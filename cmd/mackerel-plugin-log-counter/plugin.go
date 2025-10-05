@@ -42,6 +42,9 @@ func (u LogCounterPlugin) FetchMetrics() (map[string]float64, error) {
 		Callback: p,
 		Silent:   !u.opt.Verbose,
 	}
+	if u.opt.LogArchiveDir != "" {
+		fp.ArchiveDir = u.opt.LogArchiveDir
+	}
 	_, err := fp.Parse(
 		fmt.Sprintf("%s-mp-log-counter", u.opt.Prefix),
 		u.opt.LogFile,
