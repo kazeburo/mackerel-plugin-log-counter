@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.0.10](https://github.com/kazeburo/mackerel-plugin-log-counter/compare/v0.0.9...v0.0.10) - 2025-10-05
+- pin actions commithash by @kazeburo in https://github.com/kazeburo/mackerel-plugin-log-counter/pull/10
+- archive-dirのサポート by @kazeburo in https://github.com/kazeburo/mackerel-plugin-log-counter/pull/12
+
 ## [v0.0.9](https://github.com/kazeburo/mackerel-plugin-log-counter/compare/v0.0.8...v0.0.9) - 2025-05-04
 - update deps and add tests by @kazeburo in https://github.com/kazeburo/mackerel-plugin-log-counter/pull/8
 
