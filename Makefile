@@ -1,5 +1,6 @@
 VERSION=0.0.10
-LDFLAGS=-ldflags "-w -s -X main.version=${VERSION}"
+GITCOMMIT?=$(shell git describe --dirty --always)
+LDFLAGS=-ldflags "-w -s -X main.version=${VERSION} -X main.commit=${GITCOMMIT}"
 all: mackerel-plugin-log-counter
 
 .PHONY: mackerel-plugin-linux-process-status
@@ -19,3 +20,6 @@ check:
 clean:
 	rm -rf mackerel-plugin-log-counter
 
+update:
+	go get -u ./...
+	go mod tidy
