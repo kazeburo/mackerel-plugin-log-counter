@@ -45,6 +45,9 @@ func _main() int {
 	psr := flags.NewParser(&opt, flags.HelpFlag|flags.PassDoubleDash)
 	_, err := psr.Parse()
 	if opt.Version {
+		if commit == "" {
+			commit = "dev"
+		}
 		fmt.Printf(
 			"%s-%s\n%s/%s, %s, %s\n",
 			filepath.Base(os.Args[0]),
