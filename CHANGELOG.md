@@ -1,5 +1,8 @@
 # Changelog
 
+## [v0.0.12](https://github.com/kazeburo/mackerel-plugin-log-counter/compare/v0.0.11...v0.0.12) - 2025-10-22
+- uniq match count by @kazeburo in https://github.com/kazeburo/mackerel-plugin-log-counter/pull/16
+
 ## [v0.0.11](https://github.com/kazeburo/mackerel-plugin-log-counter/compare/v0.0.10...v0.0.11) - 2025-10-20
 - update deps by @kazeburo in https://github.com/kazeburo/mackerel-plugin-log-counter/pull/13
 - update deps and improve show version by @kazeburo in https://github.com/kazeburo/mackerel-plugin-log-counter/pull/15
