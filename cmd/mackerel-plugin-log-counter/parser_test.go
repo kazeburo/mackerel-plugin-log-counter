@@ -6,7 +6,7 @@ import (
 )
 
 func TestParser_Parse(t *testing.T) {
-	patterns := []patternReg{
+	patterns := []*patternReg{
 		{name: "pattern1", reg: regexp.MustCompile(`error`)},
 		{name: "pattern2", reg: regexp.MustCompile(`warning`)},
 	}
@@ -49,7 +49,7 @@ func TestParser_Parse(t *testing.T) {
 func TestParser_FilterIgnore(t *testing.T) {
 	filter := []byte("filter")
 	ignore := []byte("ignore")
-	patterns := []patternReg{
+	patterns := []*patternReg{
 		{name: "pattern1", reg: regexp.MustCompile(`error`)},
 	}
 	opt := Opt{
@@ -92,7 +92,7 @@ func TestParser_FilterIgnore(t *testing.T) {
 }
 
 func TestParser_GetResult(t *testing.T) {
-	patterns := []patternReg{
+	patterns := []*patternReg{
 		{name: "pattern1", reg: regexp.MustCompile(`error`)},
 	}
 	opt := Opt{

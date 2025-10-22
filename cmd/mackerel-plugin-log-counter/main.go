@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"runtime"
+	"strings"
 
 	"github.com/jessevdk/go-flags"
 	mp "github.com/mackerelio/go-mackerel-plugin"
@@ -18,6 +19,7 @@ var commit string
 type patternReg struct {
 	reg  *regexp.Regexp
 	name string
+	uniq bool
 }
 
 type Opt struct {
@@ -25,13 +27,13 @@ type Opt struct {
 	Filter        string   `long:"filter" description:"filter string used before check pattern."`
 	Ignore        string   `long:"ignore" description:"ignore string used before check pattern."`
 	Patterns      []string `short:"p" long:"pattern" required:"true" description:"Regexp pattern to search for."`
-	KeyNames      []string `short:"k" long:"key-name" required:"true" description:"Key name for pattern"`
+	KeyNames      []string `short:"k" long:"key-name" required:"true" description:"Key name for pattern. if key has '|uniq' suffix, this plugin count unique matches."`
 	Prefix        string   `long:"prefix" required:"true" description:"Metric key prefix"`
 	LogFile       string   `long:"log-file" default:"/var/log/messages" description:"Path to log file" required:"true"`
 	LogArchiveDir string   `long:"log-archive-dir" default:"" description:"Path to log archive directory"`
 	PerSec        bool     `long:"per-second" description:"calculate per-seconds count. default per minute count"`
 	Verbose       bool     `long:"verbose" description:"display infomational logs"`
-	patternRegs   []patternReg
+	patternRegs   []*patternReg
 	filterByte    *[]byte
 	ignoreByte    *[]byte
 }
@@ -72,17 +74,14 @@ func _main() int {
 		return 1
 	}
 
-	patterns := make([]patternReg, 0)
+	patterns := make([]*patternReg, 0)
 	for i, k := range opt.KeyNames {
-		reg, err := regexp.Compile(opt.Patterns[i])
+		p, err := parseKeyName(opt.Patterns[i], k)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%v\n", err)
 			return 1
 		}
-		patterns = append(patterns, patternReg{
-			reg:  reg,
-			name: k,
-		})
+		patterns = append(patterns, p)
 	}
 	opt.patternRegs = patterns
 
@@ -101,4 +100,28 @@ func _main() int {
 	plugin := mp.NewMackerelPlugin(u)
 	plugin.Run()
 	return 0
+}
+
+func parseKeyName(pattern, keyName string) (*patternReg, error) {
+	reg, err := regexp.Compile(pattern)
+	if err != nil {
+		return nil, fmt.Errorf("pattern '%s' compile error. %w", pattern, err)
+	}
+
+	uniq := false
+
+	fields := strings.FieldsFunc(keyName, func(r rune) bool {
+		return r == '|'
+	})
+	if len(fields) == 2 && fields[1] == "uniq" {
+		uniq = true
+	} else if len(fields) >= 2 {
+		return nil, fmt.Errorf("key name '%s' format error. must be <name> or <name>|uniq", keyName)
+	}
+
+	return &patternReg{
+		reg:  reg,
+		name: fields[0],
+		uniq: uniq,
+	}, nil
 }

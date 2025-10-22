@@ -19,13 +19,13 @@ func TestLogCounterPlugin_FetchMetrics(t *testing.T) {
 		t.Fatalf("failed to create log file: %v", err)
 	}
 
-	patterns := []patternReg{
+	patterns := []*patternReg{
 		{name: "pattern1", reg: regexp.MustCompile(`error`)},
 		{name: "pattern2", reg: regexp.MustCompile(`warning`)},
 	}
 	{
 		opt := Opt{
-			Prefix:      "test",
+			Prefix:      "TestLogCounterPlugin_FetchMetrics",
 			patternRegs: patterns,
 			LogFile:     logFileName,
 			PerSec:      true,
@@ -49,7 +49,7 @@ func TestLogCounterPlugin_FetchMetrics(t *testing.T) {
 
 	{
 		opt := Opt{
-			Prefix:      "test",
+			Prefix:      "TestLogCounterPlugin_FetchMetrics",
 			patternRegs: patterns,
 			LogFile:     logFileName,
 			PerSec:      true,
@@ -75,7 +75,7 @@ func TestLogCounterPlugin_FetchMetrics(t *testing.T) {
 	time.Sleep(time.Second)
 	{
 		opt := Opt{
-			Prefix:      "test",
+			Prefix:      "TestLogCounterPlugin_FetchMetrics",
 			patternRegs: patterns,
 			LogFile:     logFileName,
 			PerSec:      false,
@@ -89,6 +89,64 @@ func TestLogCounterPlugin_FetchMetrics(t *testing.T) {
 			"pattern2": 300,
 		}, "match metrics")
 	}
+
+}
+
+func TestLogCounterPlugin_FetchMetrics_Uniq(t *testing.T) {
+	tmpdir := t.TempDir()
+	logFileName := filepath.Join(tmpdir, "log")
+	fh, err := os.Create(logFileName)
+	if err != nil {
+		t.Fatalf("failed to create log file: %v", err)
+	}
+
+	// uniq=true のパターンを用意
+	patterns := []*patternReg{
+		{name: "pattern1", reg: regexp.MustCompile(`error`), uniq: true},
+		{name: "pattern2", reg: regexp.MustCompile(`error: \w+`), uniq: true},
+	}
+
+	// initialize parser to create tracking files
+	{
+		opt := Opt{
+			Prefix:      "TestLogCounterPlugin_FetchMetrics_Uniq",
+			patternRegs: patterns,
+			LogFile:     logFileName,
+			PerSec:      true,
+		}
+		plugin := LogCounterPlugin{opt: opt}
+
+		_, err := plugin.FetchMetrics()
+		assert.NoError(t, err)
+	}
+
+	keys := []string{"aaaa", "bbbb", "cccc", "dddd", "eeee"}
+	for _, key := range keys {
+		for i := 0; i < 5; i++ {
+			fh.WriteString(fmt.Sprintf("error: %s something failed\n", key))
+		}
+	}
+
+	fh.Sync()
+
+	// allow followparser to measure a non-zero duration
+	time.Sleep(time.Second)
+
+	opt := Opt{
+		Prefix:      "TestLogCounterPlugin_FetchMetrics_Uniq",
+		patternRegs: patterns,
+		LogFile:     logFileName,
+		PerSec:      true,
+	}
+	plugin := LogCounterPlugin{opt: opt}
+
+	m, err := plugin.FetchMetrics()
+	assert.NoError(t, err)
+	// uniq=true なので重複行は1件のみカウントされることを期待
+	assert.Equal(t, m, map[string]float64{
+		"pattern1": 1,
+		"pattern2": 5,
+	}, "match metrics")
 }
 
 func TestLogCounterPlugin_RotateAndArchive(t *testing.T) {
@@ -104,7 +162,7 @@ func TestLogCounterPlugin_RotateAndArchive(t *testing.T) {
 		t.Fatalf("failed to create log file: %v", err)
 	}
 
-	patterns := []patternReg{
+	patterns := []*patternReg{
 		{name: "pattern1", reg: regexp.MustCompile(`error`)},
 		{name: "pattern2", reg: regexp.MustCompile(`warning`)},
 	}
@@ -112,7 +170,7 @@ func TestLogCounterPlugin_RotateAndArchive(t *testing.T) {
 	// initial run to create tracking files
 	{
 		opt := Opt{
-			Prefix:        "test",
+			Prefix:        "TestLogCounterPlugin_RotateAndArchive",
 			patternRegs:   patterns,
 			LogFile:       logFileName,
 			LogArchiveDir: archiveDir,
@@ -160,7 +218,7 @@ func TestLogCounterPlugin_RotateAndArchive(t *testing.T) {
 
 	{
 		opt := Opt{
-			Prefix:        "test",
+			Prefix:        "TestLogCounterPlugin_RotateAndArchive",
 			patternRegs:   patterns,
 			LogFile:       logFileName,
 			LogArchiveDir: archiveDir,
