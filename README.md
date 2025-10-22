@@ -35,7 +35,7 @@ something-log.new       5.26314        1635396141
 something-log.removed   5.26314        1635396141
 ```
 
-## Uniqness count usage
+## Uniqueness count usage
 
 If log was these.
 ```
