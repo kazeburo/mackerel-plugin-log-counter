@@ -17,7 +17,7 @@ Application Options:
       --prefix=          Metric key prefix
       --log-file=        Path to log file (default: /var/log/messages)
       --log-archive-dir= Path to log archive directory
-      --per-second       calculate per-seconds count. default per minute count
+      --per-second       calculate per-second count. default per minute count
       --verbose          display infomational logs
 
 Help Options:
