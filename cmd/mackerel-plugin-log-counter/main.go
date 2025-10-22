@@ -32,7 +32,7 @@ type Opt struct {
 	LogFile       string   `long:"log-file" default:"/var/log/messages" description:"Path to log file" required:"true"`
 	LogArchiveDir string   `long:"log-archive-dir" default:"" description:"Path to log archive directory"`
 	PerSec        bool     `long:"per-second" description:"calculate per-seconds count. default per minute count"`
-	Verbose       bool     `long:"verbose" description:"display infomational logs"`
+	Verbose       bool     `long:"verbose" description:"display informational logs"`
 	patternRegs   []*patternReg
 	filterByte    *[]byte
 	ignoreByte    *[]byte
