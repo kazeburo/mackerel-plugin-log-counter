@@ -1,21 +1,29 @@
 package main
 
-import "bytes"
+import (
+	"bytes"
+)
 
 type Parser struct {
-	opt        Opt
-	mapCounter map[string]float64
-	duration   float64
+	opt         Opt
+	mapCounter  map[string]float64
+	uniqCounter map[string]map[string]struct{}
+	duration    float64
 }
 
 func NewParser(opt Opt) *Parser {
 	m := map[string]float64{}
+	uq := map[string]map[string]struct{}{}
 	for _, pr := range opt.patternRegs {
 		m[pr.name] = float64(0)
+		if pr.uniq {
+			uq[pr.name] = map[string]struct{}{}
+		}
 	}
 	return &Parser{
-		opt:        opt,
-		mapCounter: m,
+		opt:         opt,
+		mapCounter:  m,
+		uniqCounter: uq,
 	}
 }
 
@@ -27,8 +35,15 @@ func (p *Parser) Parse(b []byte) error {
 		return nil
 	}
 	for _, pr := range p.opt.patternRegs {
-		if pr.reg.Match(b) {
-			p.mapCounter[pr.name]++
+		if pr.uniq {
+			f := pr.reg.Find(b)
+			if len(f) > 0 {
+				p.uniqCounter[pr.name][string(f)] = struct{}{}
+			}
+		} else {
+			if pr.reg.Match(b) {
+				p.mapCounter[pr.name]++
+			}
 		}
 	}
 	return nil
@@ -45,7 +60,11 @@ func (p *Parser) GetResult() map[string]float64 {
 		return m
 	}
 	for _, pr := range p.opt.patternRegs {
-		m[pr.name] = p.mapCounter[pr.name]
+		if pr.uniq {
+			m[pr.name] = float64(len(p.uniqCounter[pr.name]))
+		} else {
+			m[pr.name] = p.mapCounter[pr.name]
+		}
 		if p.opt.PerSec {
 			m[pr.name] = m[pr.name] / p.duration
 		} else {
