@@ -18,7 +18,7 @@ Application Options:
       --log-file=        Path to log file (default: /var/log/messages)
       --log-archive-dir= Path to log archive directory
       --per-second       calculate per-second count. default per minute count
-      --verbose          display infomational logs
+      --verbose          display informational logs
 
 Help Options:
   -h, --help             Show this help message
