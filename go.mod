@@ -4,7 +4,7 @@ go 1.24.0
 
 require (
 	github.com/jessevdk/go-flags v1.6.1
-	github.com/kazeburo/followparser v0.2.9
+	github.com/kazeburo/followparser v0.2.10
 	github.com/mackerelio/go-mackerel-plugin v0.1.5
 	github.com/mackerelio/golib v1.2.1
 	github.com/stretchr/testify v1.11.1
