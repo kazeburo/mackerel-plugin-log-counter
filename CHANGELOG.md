@@ -1,5 +1,14 @@
 # Changelog
 
+## [v0.0.14](https://github.com/kazeburo/mackerel-plugin-log-counter/compare/v0.0.13...v0.0.14) - 2026-04-18
+- ci: bump goreleaser/goreleaser-action from 6.4.0 to 7.0.0 in the dependencies group by @dependabot[bot] in https://github.com/kazeburo/mackerel-plugin-log-counter/pull/23
+- ci: bump the dependencies group across 1 directory with 2 updates by @dependabot[bot] in https://github.com/kazeburo/mackerel-plugin-log-counter/pull/26
+- ci: bump actions/setup-go from 6.3.0 to 6.4.0 in the dependencies group by @dependabot[bot] in https://github.com/kazeburo/mackerel-plugin-log-counter/pull/27
+- go: bump github.com/mackerelio/go-mackerel-plugin from 0.1.5 to 0.1.6 in the dependencies group by @dependabot[bot] in https://github.com/kazeburo/mackerel-plugin-log-counter/pull/29
+- ci: bump Songmu/tagpr from 1.17.1 to 1.18.1 in the dependencies group by @dependabot[bot] in https://github.com/kazeburo/mackerel-plugin-log-counter/pull/28
+- go: bump github.com/mackerelio/golib from 1.2.1 to 1.2.2 in the dependencies group by @dependabot[bot] in https://github.com/kazeburo/mackerel-plugin-log-counter/pull/30
+- ci: bump Songmu/tagpr from 1.18.1 to 1.18.2 in the dependencies group by @dependabot[bot] in https://github.com/kazeburo/mackerel-plugin-log-counter/pull/31
+
 ## [v0.0.13](https://github.com/kazeburo/mackerel-plugin-log-counter/compare/v0.0.12...v0.0.13) - 2026-02-16
 - Create dependabot.yml by @kazeburo in https://github.com/kazeburo/mackerel-plugin-log-counter/pull/18
 - ci: bump the dependencies group with 4 updates by @dependabot[bot] in https://github.com/kazeburo/mackerel-plugin-log-counter/pull/21
