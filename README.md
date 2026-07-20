@@ -60,4 +60,4 @@ something-happen.errorfile   4        1635396141
 
 ## Install
 
-Please download release page or `mkr plugin install kazeburo/mackerel-plugin-log-counter`.
+Please download release page or `mkr plugin install monitoring-forge/mackerel-plugin-log-counter`.
