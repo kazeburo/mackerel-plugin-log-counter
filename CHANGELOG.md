@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.0.15](https://github.com/monitoring-forge/mackerel-plugin-log-counter/compare/v0.0.14...v0.0.15) - 2026-07-20
+
+- respository transfer, update deps and fix a flaky test by @kazeburo in https://github.com/monitoring-forge/mackerel-plugin-log-counter/pull/41
+
 ## [v0.0.14](https://github.com/kazeburo/mackerel-plugin-log-counter/compare/v0.0.13...v0.0.14) - 2026-07-13
 
 - ci: bump goreleaser/goreleaser-action from 6.4.0 to 7.0.0 in the dependencies group by @dependabot[bot] in https://github.com/kazeburo/mackerel-plugin-log-counter/pull/23
