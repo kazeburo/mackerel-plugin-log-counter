@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
+	"net/url"
 
-	"github.com/kazeburo/followparser"
 	mp "github.com/mackerelio/go-mackerel-plugin"
 	"github.com/mackerelio/golib/pluginutil"
+	"github.com/monitoring-forge/followparser"
 )
 
 type LogCounterPlugin struct {
@@ -46,7 +47,7 @@ func (u LogCounterPlugin) FetchMetrics() (map[string]float64, error) {
 		fp.ArchiveDir = u.opt.LogArchiveDir
 	}
 	_, err := fp.Parse(
-		fmt.Sprintf("%s-mp-log-counter", u.opt.Prefix),
+		fmt.Sprintf("%s-mp-log-counter-%s", u.opt.Prefix, url.PathEscape(u.opt.LogFile)),
 		u.opt.LogFile,
 	)
 	if err != nil {

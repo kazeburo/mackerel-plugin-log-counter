@@ -182,6 +182,8 @@ func TestLogCounterPlugin_RotateAndArchive(t *testing.T) {
 		assert.NoError(t, err)
 	}
 
+	beforeSleep := time.Now()
+
 	// write some lines to the original log file, then rotate (move to archive)
 	for i := 0; i < 10; i++ {
 		fh.WriteString(fmt.Sprintf("warning msg %08d\n", i))
@@ -213,8 +215,8 @@ func TestLogCounterPlugin_RotateAndArchive(t *testing.T) {
 	}
 	fh2.Sync()
 
-	// allow followparser to measure a non-zero duration
-	time.Sleep(time.Second)
+	// beforeSleepから1秒変わるまでsleep
+	time.Sleep(time.Until(beforeSleep.Add(time.Second)))
 
 	{
 		opt := Opt{
